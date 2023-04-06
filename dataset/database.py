@@ -51,7 +51,7 @@ class BaseDatabase(abc.ABC):
         # dummy mask
         img = self.get_image(img_id)
         h, w = img.shape[:2]
-        return np.ones([h,w],np.bool)
+        return np.ones([h,w],bool)
 
 LINEMOD_ROOT='data/LINEMOD'
 class LINEMODDatabase(BaseDatabase):
@@ -238,23 +238,28 @@ class GenMOPDatabase(BaseDatabase):
 class CustomDatabase(BaseDatabase):
     def __init__(self, database_name):
         super().__init__(database_name)
-        self.root = Path(os.path.join('data',database_name))
+        self.root = Path(os.path.join('/home/tobias/Thesis_tobias/poseEstimation_grasping/Gen6D','data',database_name))
+        print(self.root)
         self.img_dir = self.root / 'images'
         if (self.root/'img_fns.pkl').exists():
             self.img_fns = read_pickle(str(self.root/'img_fns.pkl'))
         else:
             self.img_fns = [Path(fn).name for fn in glob.glob(str(self.img_dir)+'/*.jpg')]
+            print("Paths",self.img_fns)
             save_pickle(self.img_fns, str(self.root/'img_fns.pkl'))
 
         self.colmap_root = self.root / 'colmap'
         if (self.colmap_root / 'sparse' / '0').exists():
+            print("IFFFFFFFFFFFFFFFFFFFFFFFFF")
             cameras, images, points3d = read_model(str(self.colmap_root / 'sparse' / '0'))
             self.poses, self.Ks, self.img_ids = parse_colmap_project(cameras, images, self.img_fns)
         else:
             self.img_ids = [str(k) for k in range(len(self.img_fns))]
+            print("image ids",self.img_ids)
             self.poses, self.Ks = {}, {}
 
         if len(self.poses.keys())>0:
+            print("If entered")
             # read meta information to scale and rotate
             directions = np.loadtxt(str(self.root/'meta_info.txt'))
             x = directions[0]
@@ -302,7 +307,9 @@ def parse_database_name(database_name:str)->BaseDatabase:
         'shapenet': ShapeNetRenderDatabase,
         'gso': GoogleScannedObjectDatabase,
     }
+    
     database_type = database_name.split('/')[0]
+    print("---------------------------------------------------------------------------------------------------",database_type)
     if database_type in name2database:
         return name2database[database_type](database_name)
     else:

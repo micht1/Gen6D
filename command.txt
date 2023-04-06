@@ -1,0 +1,1 @@
+python predict.py --cfg configs/gen6d_pretrain.yaml --database custom/zylinder --video data/custom/video/multiZylinder.mp4 --resolution 640 --transpose --output /home/tobias/Thesis_tobias/poseEstimation_grasping/Gen6D/data/custom/zylinder/test --ffmpeg /usr/bin/ffmpeg

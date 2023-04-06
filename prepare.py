@@ -18,8 +18,10 @@ def video2image(input_video, output_dir, interval=30, image_size = 640, transpos
     Path(output_dir).mkdir(parents=True, exist_ok=True)
     vidcap = cv2.VideoCapture(input_video)
     success, image = vidcap.read()
+    print(vidcap,input_video)
     count = 0
     while success:
+        print("Doing it")
         if count % interval==0:
             h, w = image.shape[:2]
             ratio = image_size/max(h,w)
