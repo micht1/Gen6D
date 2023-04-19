@@ -7,12 +7,12 @@ from skimage.io import imsave
 
 from tqdm import tqdm
 
-from dataset.database import parse_database_name, get_database_split, get_ref_point_cloud, get_diameter, get_object_center
-from estimator import name2estimator
-from utils.base_utils import load_cfg, save_pickle, read_pickle, project_points, transformation_crop
-from utils.database_utils import compute_normalized_view_correlation
-from utils.draw_utils import draw_bbox, concat_images_list, draw_bbox_3d, pts_range_to_bbox_pts
-from utils.pose_utils import compute_metrics_impl, scale_rotation_difference_from_cameras
+from Gen6D.dataset.database import parse_database_name, get_database_split, get_ref_point_cloud, get_diameter, get_object_center
+from Gen6D.estimator import name2estimator
+from Gen6D.utils.base_utils import load_cfg, save_pickle, read_pickle, project_points, transformation_crop
+from Gen6D.utils.database_utils import compute_normalized_view_correlation
+from Gen6D.utils.draw_utils import draw_bbox, concat_images_list, draw_bbox_3d, pts_range_to_bbox_pts
+from Gen6D.utils.pose_utils import compute_metrics_impl, scale_rotation_difference_from_cameras
 
 
 def get_gt_info(que_pose, que_K, render_poses, render_Ks, object_center):

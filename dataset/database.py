@@ -10,9 +10,9 @@ import plyfile
 from PIL import Image
 from skimage.io import imread, imsave
 
-from utils.base_utils import read_pickle, save_pickle, pose_compose, load_point_cloud, pose_inverse, resize_img, \
+from Gen6D.utils.base_utils import read_pickle, save_pickle, pose_compose, load_point_cloud, pose_inverse, resize_img, \
     mask_depth_to_pts, transform_points_pose
-from utils.read_write_model import read_model
+from Gen6D.utils.read_write_model import read_model
 
 SUN_IMAGE_ROOT = 'data/SUN2012pascalformat/JPEGImages'
 SUN_IMAGE_ROOT_128 = 'data/SUN2012pascalformat/JPEGImages_128'
@@ -347,6 +347,7 @@ def get_ref_point_cloud(database):
         pc = pc * database.scale + database.offset
         return pc
     else:
+        ref_point_cloud = database.object_point_cloud
         raise NotImplementedError
     return ref_point_cloud
 
@@ -367,9 +368,11 @@ def get_diameter(database):
     elif isinstance(database, CustomDatabase):
         return 2.0
     else:
+        return 2.0
         raise NotImplementedError
 
 def get_object_center(database):
+    print(type(database))
     if isinstance(database, LINEMODDatabase):
         return database.object_center
     elif isinstance(database, GenMOPDatabase):
@@ -385,6 +388,7 @@ def get_object_center(database):
     elif isinstance(database, NormalizedDatabase):
         return np.zeros(3,dtype=np.float32)
     else:
+        return database.center
         raise NotImplementedError
 
 def get_object_vert(database):
@@ -401,6 +405,7 @@ def get_object_vert(database):
     elif isinstance(database, CustomDatabase):
         return np.asarray([0,0,1], np.float32)
     else:
+        return np.asarray([0,0,1], np.float32)
         raise NotImplementedError
 
 def normalize_pose(pose, scale, offset):

@@ -4,9 +4,9 @@ import torchvision
 import numpy as np
 import torch.nn.functional as F
 
-from network.attention import AttentionBlock
-from network.pretrain_models import VGGBNPretrain
-from utils.base_utils import color_map_forward
+from Gen6D.network.attention import AttentionBlock
+from Gen6D.network.pretrain_models import VGGBNPretrain
+from Gen6D.utils.base_utils import color_map_forward
 
 
 class ViewpointSelector(nn.Module):
@@ -156,10 +156,10 @@ class ViewpointSelector(nn.Module):
         @return:
         """
         an,rfn,h,w,_=ref_imgs.shape
-        ref_imgs = torch.from_numpy(color_map_forward(ref_imgs).transpose([0, 1, 4, 2, 3])).cuda()  # an,rfn,3,h,w
-        ref_poses, object_center, object_vert = torch.from_numpy(ref_poses.astype(np.float32)).cuda(), \
-                                                torch.from_numpy(object_center.astype(np.float32)).cuda(), \
-                                                torch.from_numpy(object_vert.astype(np.float32)).cuda()
+        ref_imgs = torch.from_numpy(color_map_forward(ref_imgs).transpose([0, 1, 4, 2, 3])).cpu()  # an,rfn,3,h,w
+        ref_poses, object_center, object_vert = torch.from_numpy(ref_poses.astype(np.float32)).cpu(), \
+                                                torch.from_numpy(object_center.astype(np.float32)).cpu(), \
+                                                torch.from_numpy(object_vert.astype(np.float32)).cpu()
         self.extract_ref_feats(ref_imgs, ref_poses, object_center, object_vert)
 
     def select_que_imgs(self, que_imgs):
@@ -167,7 +167,7 @@ class ViewpointSelector(nn.Module):
         @param que_imgs: [qn,h,w,3]
         @return:
         """
-        que_imgs = torch.from_numpy(color_map_forward(que_imgs).transpose([0, 3, 1, 2])).cuda()  # qn,3,h,w
+        que_imgs = torch.from_numpy(color_map_forward(que_imgs).transpose([0, 3, 1, 2])).cpu()  # qn,3,h,w
         logits, angles = self.compute_view_point_feats(que_imgs) # qn,rfn
         ref_idx = torch.argmax(logits,1) # qn,
         angles = angles[torch.arange(ref_idx.shape[0]), ref_idx] # qn,

@@ -4,8 +4,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from network.operator import generate_coords, pose_apply_th
-from pytorch3d.transforms import quaternion_apply
+from Gen6D.network.operator import generate_coords, pose_apply_th
+from Gen6D.pytorch3d.transforms import quaternion_apply
 
 
 class Loss:

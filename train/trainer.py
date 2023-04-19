@@ -6,14 +6,14 @@ from torch.optim import Adam, SGD
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from dataset.train_dataset import name2dataset
-from network.loss import name2loss
-from network import name2network
-from train.lr_common_manager import name2lr_manager
-from network.metrics import name2metrics
-from train.train_tools import to_cuda, Logger
-from train.train_valid import ValidationEvaluator
-from utils.dataset_utils import dummy_collate_fn, simple_collate_fn
+from Gen6D.dataset.train_dataset import name2dataset
+from Gen6D.network.loss import name2loss
+from Gen6D.network import name2network
+from Gen6D.train.lr_common_manager import name2lr_manager
+from Gen6D.network.metrics import name2metrics
+from Gen6D.train.train_tools import to_cuda, Logger
+from Gen6D.train.train_valid import ValidationEvaluator
+from Gen6D.utils.dataset_utils import dummy_collate_fn, simple_collate_fn
 
 
 class Trainer:

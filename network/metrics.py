@@ -7,12 +7,12 @@ from skimage.io import imsave
 from transforms3d.axangles import mat2axangle
 from transforms3d.quaternions import quat2mat
 
-from network.loss import Loss
-from utils.base_utils import color_map_backward, transformation_crop, pose_apply, pose_compose, pose_inverse, \
+from Gen6D.network.loss import Loss
+from Gen6D.utils.base_utils import color_map_backward, transformation_crop, pose_apply, pose_compose, pose_inverse, \
     project_points
-from utils.bbox_utils import parse_bbox_from_scale_offset, bboxes_iou, lthw_to_ltrb
-from utils.draw_utils import draw_bbox, concat_images_list, pts_range_to_bbox_pts, draw_bbox_3d
-from utils.pose_utils import pose_sim_to_pose_rigid, compute_pose_errors
+from Gen6D.utils.bbox_utils import parse_bbox_from_scale_offset, bboxes_iou, lthw_to_ltrb
+from Gen6D.utils.draw_utils import draw_bbox, concat_images_list, pts_range_to_bbox_pts, draw_bbox_3d
+from Gen6D.utils.pose_utils import pose_sim_to_pose_rigid, compute_pose_errors
 
 
 class VisualizeBBoxScale(Loss):

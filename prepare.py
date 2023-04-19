@@ -6,11 +6,11 @@ import torch
 from skimage.io import imsave
 from tqdm import tqdm
 
-from colmap_script import build_colmap_model_no_pose
-from dataset.database import parse_database_name, get_database_split
-from estimator import Gen6DEstimator
-from network import name2network
-from utils.base_utils import load_cfg, save_pickle
+from Gen6D.colmap_script import build_colmap_model_no_pose
+from Gen6D.dataset.database import parse_database_name, get_database_split
+from Gen6D.estimator import Gen6DEstimator
+from Gen6D.network import name2network
+from Gen6D.utils.base_utils import load_cfg, save_pickle
 
 
 def video2image(input_video, output_dir, interval=30, image_size = 640, transpose=False):

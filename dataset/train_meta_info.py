@@ -3,8 +3,8 @@ import os
 
 import numpy as np
 
-from dataset.database import Co3D_ROOT
-from utils.base_utils import read_pickle, save_pickle
+from Gen6D.dataset.database import Co3D_ROOT
+from Gen6D.utils.base_utils import read_pickle, save_pickle
 
 ####################google scan objects##########################
 def get_gso_split(resolution=128):

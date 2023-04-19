@@ -6,9 +6,9 @@ from pathlib import Path
 import numpy as np
 from skimage.io import imsave
 
-from dataset.database import BaseDatabase, get_database_split
-from utils.colmap_database import COLMAPDatabase
-from utils.read_write_model import CAMERA_MODEL_NAMES
+from Gen6D.dataset.database import BaseDatabase, get_database_split
+from Gen6D.utils.colmap_database import COLMAPDatabase
+from Gen6D.utils.read_write_model import CAMERA_MODEL_NAMES
 
 def run_sfm(colmap_path, model_path, database_path, image_dir):
     logging.info('Running the triangulation...')

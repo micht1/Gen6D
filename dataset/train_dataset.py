@@ -14,18 +14,18 @@ from torch.utils.data import Dataset
 from tqdm import tqdm
 from transforms3d.quaternions import mat2quat
 
-from dataset.database import parse_database_name, get_object_center, Co3DResizeDatabase, get_database_split, \
+from Gen6D.dataset.database import parse_database_name, get_object_center, Co3DResizeDatabase, get_database_split, \
     get_object_vert, get_diameter, NormalizedDatabase, normalize_pose, get_ref_point_cloud
-from dataset.train_meta_info import name2database_names
-from utils.base_utils import read_pickle, save_pickle, color_map_forward, project_points, transformation_compose_2d, \
+from Gen6D.dataset.train_meta_info import name2database_names
+from Gen6D.utils.base_utils import read_pickle, save_pickle, color_map_forward, project_points, transformation_compose_2d, \
     transformation_offset_2d, transformation_scale_2d, transformation_rotation_2d, transformation_apply_2d, \
     color_map_backward, sample_fps_points, transformation_crop, pose_inverse, pose_compose, transform_points_pose, \
     pose_apply
-from utils.database_utils import select_reference_img_ids_fps, normalize_reference_views, \
+from Gen6D.utils.database_utils import select_reference_img_ids_fps, normalize_reference_views, \
     compute_normalized_view_correlation, look_at_crop, select_reference_img_ids_refinement
-from utils.dataset_utils import set_seed
-from utils.imgs_info import build_imgs_info, imgs_info_to_torch
-from utils.pose_utils import scale_rotation_difference_from_cameras, let_me_look_at, let_me_look_at_2d, \
+from Gen6D.utils.dataset_utils import set_seed
+from Gen6D.utils.imgs_info import build_imgs_info, imgs_info_to_torch
+from Gen6D.utils.pose_utils import scale_rotation_difference_from_cameras, let_me_look_at, let_me_look_at_2d, \
     estimate_pose_from_similarity_transform_compose
 
 

@@ -50,6 +50,7 @@ def main(args):
         img = imread(str(output_dir/'images_raw'/f'frame{que_id}.jpg'))
         # generate a pseudo K
         h, w, _ = img.shape
+        print(img.shape)
         f=np.sqrt(h**2+w**2)
         K = np.asarray([[f,0,w/2],[0,f,h/2],[0,0,1]],np.float32)
 

@@ -2,13 +2,13 @@ import cv2
 import numpy as np
 import torch
 
-from dataset.database import BaseDatabase, get_database_split, get_object_vert, get_object_center
+from Gen6D.dataset.database import BaseDatabase, get_database_split, get_object_vert, get_object_center
 
-from network import name2network
-from utils.base_utils import load_cfg, transformation_offset_2d, transformation_scale_2d, \
+from Gen6D.network import name2network
+from Gen6D.utils.base_utils import load_cfg, transformation_offset_2d, transformation_scale_2d, \
     transformation_compose_2d, transformation_crop, transformation_rotation_2d
-from utils.database_utils import select_reference_img_ids_fps, normalize_reference_views
-from utils.pose_utils import estimate_pose_from_similarity_transform_compose
+from Gen6D.utils.database_utils import select_reference_img_ids_fps, normalize_reference_views
+from Gen6D.utils.pose_utils import estimate_pose_from_similarity_transform_compose
 
 
 def compute_similarity_transform(pts0, pts1):
@@ -118,10 +118,10 @@ class Gen6DEstimator:
     def _load_module(cfg):
         refiner_cfg = load_cfg(cfg)
         refiner = name2network[refiner_cfg['network']](refiner_cfg)
-        state_dict = torch.load(f'data/model/{refiner_cfg["name"]}/model_best.pth')
+        state_dict = torch.load(f'/home/tobias/Thesis_tobias/poseEstimation_grasping/Gen6D/data/model/{refiner_cfg["name"]}/model_best.pth',map_location=torch.device('cpu'))
         refiner.load_state_dict(state_dict['network_state_dict'])
         print(f'load from {refiner_cfg["name"]}/model_best.pth step {state_dict["step"]}')
-        refiner.cuda().eval()
+        refiner.cpu().eval()
         return refiner
 
     # def _check(self, ref_point_cloud, ref_imgs, ref_poses, ref_Ks, ref_ids, database):

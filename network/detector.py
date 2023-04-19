@@ -4,9 +4,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
 
-from network.pretrain_models import VGGBNPretrain
-from utils.base_utils import color_map_forward, transformation_crop, to_cpu_numpy
-from utils.bbox_utils import parse_bbox_from_scale_offset
+from Gen6D.network.pretrain_models import VGGBNPretrain
+from Gen6D.utils.base_utils import color_map_forward, transformation_crop, to_cpu_numpy
+from Gen6D.utils.bbox_utils import parse_bbox_from_scale_offset
 
 
 class BaseDetector(nn.Module):
@@ -17,11 +17,11 @@ class BaseDetector(nn.Module):
         raise NotImplementedError
 
     def load(self, ref_imgs):
-        ref_imgs = torch.from_numpy(color_map_forward(ref_imgs)).permute(0, 3, 1, 2).cuda()
+        ref_imgs = torch.from_numpy(color_map_forward(ref_imgs)).permute(0, 3, 1, 2).cpu()
         self.load_impl(ref_imgs)
 
     def detect(self, que_imgs):
-        que_imgs = torch.from_numpy(color_map_forward(que_imgs)).permute(0, 3, 1, 2).cuda()
+        que_imgs = torch.from_numpy(color_map_forward(que_imgs)).permute(0, 3, 1, 2).cpu()
         return self.detect_impl(que_imgs) # 'scores' 'select_pr_offset' 'select_pr_scale'
 
     @staticmethod
@@ -284,7 +284,7 @@ class Detector(BaseDetector):
         # an,rfn,_,h,w = ref_imgs.shape
         # self.load_impl(ref_imgs[an//2])
         ref_imgs = torch.from_numpy(color_map_forward(ref_imgs)).permute(0,3,1,2) # rfn,3,h,w
-        ref_imgs = ref_imgs.cuda()
+        ref_imgs = ref_imgs.cpu()
         rfn, _, h, w = ref_imgs.shape
         self.load_impl(ref_imgs)
 
@@ -293,7 +293,7 @@ class Detector(BaseDetector):
         @param que_imgs: [qn,h,w,3]
         @return:
         """
-        que_imgs = torch.from_numpy(color_map_forward(que_imgs)).permute(0,3,1,2).cuda()
+        que_imgs = torch.from_numpy(color_map_forward(que_imgs)).permute(0,3,1,2).cpu()
         qn, _, h, w = que_imgs.shape
         outputs = self.detect_impl(que_imgs)
         positions, scales = self.parse_detection(
