@@ -30,15 +30,15 @@ class VisualizeBBoxScale(Loss):
         output_root = kwargs['output_root'] if 'output_root' in kwargs else 'data/vis'
 
         b, _, hr, wr = data_gt['ref_imgs_info']['imgs'].shape
-        que_select_id = data_pr['que_select_id'][0].cpu().numpy() # 3
-        scale_pr = data_pr['select_pr_scale'].detach().cpu().numpy()[0,0]
-        offset_pr = data_pr['select_pr_offset'].detach().cpu().numpy()[0]
+        que_select_id = data_pr['que_select_id'][0].cuda().numpy() # 3
+        scale_pr = data_pr['select_pr_scale'].detach().cuda().numpy()[0,0]
+        offset_pr = data_pr['select_pr_offset'].detach().cuda().numpy()[0]
         pool_ratio = data_pr['pool_ratio']
         ref_shape=(hr,wr)
         bbox_pr = parse_bbox_from_scale_offset(que_select_id, scale_pr, offset_pr, pool_ratio, ref_shape)
 
-        center = data_gt['que_imgs_info']['cens'][0].cpu().numpy()
-        scale_gt = data_gt['scale_diff'].cpu().numpy()[0]
+        center = data_gt['que_imgs_info']['cens'][0].cuda().numpy()
+        scale_gt = data_gt['scale_diff'].cuda().numpy()[0]
         h_gt, w_gt = hr * scale_gt, wr * scale_gt
         # center = bbox[:2] + bbox[2:] / 2
         bbox_gt = np.asarray([center[0] - w_gt / 2, center[1] - h_gt / 2, w_gt, h_gt])
@@ -47,10 +47,10 @@ class VisualizeBBoxScale(Loss):
         if data_index % self.cfg['output_interval'] != 0:
             return {'iou': iou}
         que_imgs = data_gt['que_imgs_info']['imgs']
-        que_imgs = color_map_backward(que_imgs.permute(0, 2, 3, 1).cpu().numpy())
+        que_imgs = color_map_backward(que_imgs.permute(0, 2, 3, 1).cuda().numpy())
         que_img = que_imgs[0]
         ref_imgs = data_gt['ref_imgs_info']['imgs']
-        ref_imgs = color_map_backward(ref_imgs.permute(0, 2, 3, 1).cpu().numpy())
+        ref_imgs = color_map_backward(ref_imgs.permute(0, 2, 3, 1).cuda().numpy())
         rfn, hr, wr, _ = ref_imgs.shape
         que_img = draw_bbox(que_img, bbox_pr, color=(0,0,255))
         que_img = draw_bbox(que_img, bbox_gt)
@@ -77,7 +77,7 @@ class VisualizeSelector(Loss):
         scores_gt = data_gt['ref_vp_scores']
         order_gt = torch.argsort(-scores_gt, 1)  # qn,rfn
 
-        order_pr, order_gt = order_pr.cpu().numpy(), order_gt.cpu().numpy()
+        order_pr, order_gt = order_pr.cuda().numpy(), order_gt.cuda().numpy()
         order_pr_min = order_pr[:,:1]
         mask1 = np.sum(order_pr_min == order_gt[:,:1], 1).astype(np.float32)
         mask3 = np.sum(order_pr_min == order_gt[:,:3], 1).astype(np.float32)
@@ -86,9 +86,9 @@ class VisualizeSelector(Loss):
         outputs['sel_acc_3'] = mask3
         outputs['sel_acc_5'] = mask5
 
-        angles_pr = data_pr['angles_pr'].cpu().numpy()*np.pi/2 # qn,rfn
-        angles_gt = data_gt['angles_r2q'].cpu().numpy() # qn,
-        gt_ref_ids = data_gt['gt_ref_ids'].cpu().numpy() # qn
+        angles_pr = data_pr['angles_pr'].cuda().numpy()*np.pi/2 # qn,rfn
+        angles_gt = data_gt['angles_r2q'].cuda().numpy() # qn,
+        gt_ref_ids = data_gt['gt_ref_ids'].cuda().numpy() # qn
         angles_pr_ = angles_pr[np.arange(gt_ref_ids.shape[0]),gt_ref_ids]
         angles_diff = angles_pr_ - angles_gt # qn
         angles_diff = np.abs(np.rad2deg(angles_diff))
@@ -106,8 +106,8 @@ class VisualizeSelector(Loss):
         # visualize selected viewpoints and regressed rotations
         ref_imgs = data_gt['ref_imgs'] # an,rfn,3,h,w
         que_imgs = data_gt['que_imgs_info']['imgs'] # qn,3,h,w
-        ref_imgs = color_map_backward(ref_imgs.cpu().numpy()).transpose([0,1,3,4,2]) # an,rfn,h,w,3
-        que_imgs = color_map_backward(que_imgs.cpu().numpy()).transpose([0,2,3,1]) # qn,h,w,3
+        ref_imgs = color_map_backward(ref_imgs.cuda().numpy()).transpose([0,1,3,4,2]) # an,rfn,h,w,3
+        que_imgs = color_map_backward(que_imgs.cuda().numpy()).transpose([0,2,3,1]) # qn,h,w,3
         imgs_out=[]
         for qi in range(que_imgs.shape[0]):
             que_img = que_imgs[qi] # h,w,3
@@ -136,13 +136,13 @@ class RefinerMetrics(Loss):
 
     def __call__(self, data_pr, data_gt, step, **kwargs):
         # 'quaternion': quaternion, 'offset': offset, 'scale': scale
-        quat_pr = data_pr['rotation'].cpu().numpy() # b,4
-        offset_pr = data_pr['offset'].cpu().numpy() # b,2
-        scale_pr = data_pr['scale'].cpu().numpy() # b,1
+        quat_pr = data_pr['rotation'].cuda().numpy() # b,4
+        offset_pr = data_pr['offset'].cuda().numpy() # b,2
+        scale_pr = data_pr['scale'].cuda().numpy() # b,1
 
-        quat_gt = data_gt['rotation'].cpu().numpy() # b,4
-        offset_gt = data_gt['offset'].cpu().numpy()[:,:2] # b,2
-        scale_gt = data_gt['scale'].cpu().numpy() # b,
+        quat_gt = data_gt['rotation'].cuda().numpy() # b,4
+        offset_gt = data_gt['offset'].cuda().numpy()[:,:2] # b,2
+        scale_gt = data_gt['scale'].cuda().numpy() # b,
 
         outputs = {}
         offset_err = np.linalg.norm(offset_pr - offset_gt,2,1) # b

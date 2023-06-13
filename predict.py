@@ -43,7 +43,7 @@ def main(args):
     (output_dir / 'images_out_smooth').mkdir(exist_ok=True, parents=True)
 
     que_num = video2image(args.video, output_dir/'images_raw', 1, args.resolution, args.transpose)
-
+    print(que_num)
     pose_init = None
     hist_pts = []
     for que_id in tqdm(range(que_num)):
@@ -53,7 +53,7 @@ def main(args):
         print(img.shape)
         f=np.sqrt(h**2+w**2)
         K = np.asarray([[f,0,w/2],[0,f,h/2],[0,0,1]],np.float32)
-
+        print("Doing stuff")
         if pose_init is not None:
             estimator.cfg['refine_iter'] = 1 # we only refine one time after initialization
         pose_pr, inter_results = estimator.predict(img, K, pose_init=pose_init)

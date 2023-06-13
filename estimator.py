@@ -118,10 +118,10 @@ class Gen6DEstimator:
     def _load_module(cfg):
         refiner_cfg = load_cfg(cfg)
         refiner = name2network[refiner_cfg['network']](refiner_cfg)
-        state_dict = torch.load(f'/home/tobias/Thesis_tobias/poseEstimation_grasping/Gen6D/data/model/{refiner_cfg["name"]}/model_best.pth',map_location=torch.device('cpu'))
+        state_dict = torch.load(f'/home/cpvr/Thesis_Tobias/Gen6D/data/model/{refiner_cfg["name"]}/model_best.pth',map_location=torch.device('cuda'))
         refiner.load_state_dict(state_dict['network_state_dict'])
         print(f'load from {refiner_cfg["name"]}/model_best.pth step {state_dict["step"]}')
-        refiner.cpu().eval()
+        refiner.cuda().eval()
         return refiner
 
     # def _check(self, ref_point_cloud, ref_imgs, ref_poses, ref_Ks, ref_ids, database):
@@ -142,6 +142,7 @@ class Gen6DEstimator:
         ref_ids_all, _ = get_database_split(database, split_type)
 
         # use fps to select reference images for detection and selection
+       
         ref_ids = select_reference_img_ids_fps(database, ref_ids_all, self.cfg['ref_view_num'])
         ref_imgs, ref_masks, ref_Ks, ref_poses, ref_Hs = \
             normalize_reference_views(database, ref_ids, self.cfg['ref_resolution'], 0.05)

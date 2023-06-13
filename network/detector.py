@@ -17,11 +17,11 @@ class BaseDetector(nn.Module):
         raise NotImplementedError
 
     def load(self, ref_imgs):
-        ref_imgs = torch.from_numpy(color_map_forward(ref_imgs)).permute(0, 3, 1, 2).cpu()
+        ref_imgs = torch.from_numpy(color_map_forward(ref_imgs)).permute(0, 3, 1, 2).cuda()
         self.load_impl(ref_imgs)
 
     def detect(self, que_imgs):
-        que_imgs = torch.from_numpy(color_map_forward(que_imgs)).permute(0, 3, 1, 2).cpu()
+        que_imgs = torch.from_numpy(color_map_forward(que_imgs)).permute(0, 3, 1, 2).cuda()
         return self.detect_impl(que_imgs) # 'scores' 'select_pr_offset' 'select_pr_scale'
 
     @staticmethod
@@ -284,7 +284,7 @@ class Detector(BaseDetector):
         # an,rfn,_,h,w = ref_imgs.shape
         # self.load_impl(ref_imgs[an//2])
         ref_imgs = torch.from_numpy(color_map_forward(ref_imgs)).permute(0,3,1,2) # rfn,3,h,w
-        ref_imgs = ref_imgs.cpu()
+        ref_imgs = ref_imgs.cuda()
         rfn, _, h, w = ref_imgs.shape
         self.load_impl(ref_imgs)
 
@@ -293,7 +293,7 @@ class Detector(BaseDetector):
         @param que_imgs: [qn,h,w,3]
         @return:
         """
-        que_imgs = torch.from_numpy(color_map_forward(que_imgs)).permute(0,3,1,2).cpu()
+        que_imgs = torch.from_numpy(color_map_forward(que_imgs)).permute(0,3,1,2).cuda()
         qn, _, h, w = que_imgs.shape
         outputs = self.detect_impl(que_imgs)
         positions, scales = self.parse_detection(

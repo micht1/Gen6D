@@ -1,9 +1,9 @@
 name: gen6d_pretrain
 type: gen6d
 
-detector: /home/tobias/Thesis_tobias/poseEstimation_grasping/Gen6D/configs/detector/detector_pretrain.yaml
-selector: /home/tobias/Thesis_tobias/poseEstimation_grasping/Gen6D/configs/selector/selector_pretrain.yaml
-refiner:  /home/tobias/Thesis_tobias/poseEstimation_grasping/Gen6D/configs/refiner/refiner_pretrain.yaml
+detector: /home/cpvr/Thesis_Tobias/Gen6D/configs/detector/detector_pretrain.yaml
+selector: /home/cpvr/Thesis_Tobias/Gen6D/configs/selector/selector_pretrain.yaml
+refiner:  /home/cpvr/Thesis_Tobias/Gen6D/configs/refiner/refiner_pretrain.yaml
 
 ref_resolution: 128   # reference image resolution
 ref_view_num: 64      # view number used in selection

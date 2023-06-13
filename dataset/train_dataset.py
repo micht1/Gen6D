@@ -787,10 +787,10 @@ class DetectionValDataset(Dataset):
 def _check_selection(que_imgs_info,ref_imgs,ref_vp_scores,angles_r2q,index):
     from utils.draw_utils import concat_images_list
     from skimage.io import imsave
-    que_imgs = color_map_backward(que_imgs_info['imgs'].cpu().numpy()).transpose([0,2,3,1]) # qn,h,w,3
-    ref_imgs = color_map_backward(ref_imgs.cpu().numpy()).transpose([0,1,3,4,2]) # an,rfn,h,w,3
-    angles_r2q = angles_r2q.cpu().numpy()
-    ref_vp_scores = ref_vp_scores.cpu().numpy() # qn,rfn
+    que_imgs = color_map_backward(que_imgs_info['imgs'].cuda().numpy()).transpose([0,2,3,1]) # qn,h,w,3
+    ref_imgs = color_map_backward(ref_imgs.cuda().numpy()).transpose([0,1,3,4,2]) # an,rfn,h,w,3
+    angles_r2q = angles_r2q.cuda().numpy()
+    ref_vp_scores = ref_vp_scores.cuda().numpy() # qn,rfn
     ref_vp_idx = np.argsort(-ref_vp_scores,1) # qn,rfn
     qn, h, w, _ = que_imgs.shape
     for qi in range(1):
